@@ -2,7 +2,6 @@ package com.nmg.me.block;
 
 import com.nmg.me.Constants;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.IBucketPickupHandler;
 import net.minecraft.block.ILiquidContainer;
 import net.minecraft.block.state.IBlockState;
@@ -17,34 +16,34 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
-// NOTE: We're not using MEBlockWaterLogged or MEBlockFacingWaterLogged here since we need to have the
-//       BlockFenceGate functionality, so unfortunately we need to have some code duplication
-public class MEBlockFenceGate extends BlockFenceGate implements IBucketPickupHandler, ILiquidContainer
+import javax.annotation.Nullable;
+
+public class MEBlockWaterLogged extends Block implements IBucketPickupHandler, ILiquidContainer
 {
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	public MEBlockFenceGate(Properties builder)
+	public MEBlockWaterLogged(Properties properties)
 	{
-		super(builder);
+		super(properties);
+		this.setDefaultState(this.getStateContainer().getBaseState().with(WATERLOGGED, false));
 	}
 
+	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder)
+	{
+		builder.add(WATERLOGGED);
+	}
+
+	@Nullable
 	@Override
 	public IBlockState getStateForPlacement(BlockItemUseContext context)
 	{
 		IBlockReader world = context.getWorld();
 		BlockPos pos = context.getPos();
 		IFluidState fluidState = world.getFluidState(pos);
-		IBlockState state = super.getStateForPlacement(context);
 
-		return state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
-	}
-
-	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder)
-	{
-		super.fillStateContainer(builder);
-		builder.add(WATERLOGGED);
+		return super.getStateForPlacement(context).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
 	}
 
 	@Override

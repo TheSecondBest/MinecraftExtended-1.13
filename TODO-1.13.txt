@@ -1,6 +1,5 @@
 - Fix Entities
 - Fix Container inventory
-- Generalize Waterlogged Blocks
 - Update Storage Dimension/World generation code
 - Fix Carpenters Table Gui
 - Fix Commands

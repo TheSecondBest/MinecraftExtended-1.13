@@ -28,17 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockLantern extends Block implements IBucketPickupHandler, ILiquidContainer
+public class BlockLantern extends MEBlockWaterLogged
 {
-
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	private final VoxelShape SHAPE;
 
 	public BlockLantern()
 	{
 		super(Properties.create(Material.ANVIL).lightValue(9));
-		this.setDefaultState(this.getStateContainer().getBaseState().with(WATERLOGGED, false));
 		SHAPE = this.generateShape();
 	}
 
@@ -119,65 +116,6 @@ public class BlockLantern extends Block implements IBucketPickupHandler, ILiquid
 	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.TRANSLUCENT;
-	}
-
-	@Override
-	public IBlockState getStateForPlacement(BlockItemUseContext context)
-	{
-		IBlockReader world = context.getWorld();
-		BlockPos pos = context.getPos();
-		IFluidState fluidState = world.getFluidState(pos);
-		IBlockState state = super.getStateForPlacement(context);
-
-		return state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
-	}
-
-	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder)
-	{
-		super.fillStateContainer(builder);
-		builder.add(WATERLOGGED);
-	}
-
-	@Override
-	public IFluidState getFluidState(IBlockState state)
-	{
-		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
-	}
-
-	@Override
-	public Fluid pickupFluid(IWorld worldIn, BlockPos pos, IBlockState state)
-	{
-		if (state.get(WATERLOGGED))
-		{
-			worldIn.setBlockState(pos, state.with(WATERLOGGED, false), Constants.BlockStateFlags.NOTIFY_AND_UPDATE);
-			return Fluids.WATER;
-		}
-
-		return Fluids.EMPTY;
-	}
-
-	@Override
-	public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, IBlockState state, Fluid fluidIn)
-	{
-		return !state.get(WATERLOGGED) && fluidIn == Fluids.WATER;
-	}
-
-	@Override
-	public boolean receiveFluid(IWorld worldIn, BlockPos pos, IBlockState state, IFluidState fluidStateIn)
-	{
-		if (!state.get(WATERLOGGED) && fluidStateIn.getFluid() == Fluids.WATER)
-		{
-			if (!worldIn.isRemote())
-			{
-				worldIn.setBlockState(pos, state.with(WATERLOGGED, true), Constants.BlockStateFlags.NOTIFY_AND_UPDATE);
-				worldIn.getPendingFluidTicks().scheduleTick(pos, fluidStateIn.getFluid(), fluidStateIn.getFluid().getTickRate(worldIn));
-			}
-
-			return true;
-		}
-
-		return false;
 	}
 
 }

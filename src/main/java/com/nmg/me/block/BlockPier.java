@@ -29,10 +29,9 @@ import net.minecraft.world.IWorldReaderBase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockPier extends MEBlockFacing implements IBucketPickupHandler, ILiquidContainer
+public class BlockPier extends MEBlockFacingWaterLogged
 {
 
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 	public static final EnumProperty<PierPart> PART = EnumProperty.create("part", PierPart.class);
 
 	public final ImmutableMap<IBlockState, VoxelShape> SHAPES;
@@ -103,12 +102,10 @@ public class BlockPier extends MEBlockFacing implements IBucketPickupHandler, IL
 	@Override
 	public IBlockState getStateForPlacement(BlockItemUseContext context)
 	{
-		IBlockState state = super.getStateForPlacement(context);
 		IBlockReader world = context.getWorld();
 		BlockPos pos = context.getPos();
-		IFluidState fluidState = world.getFluidState(pos);
 
-		return state.with(PART, world.getBlockState(pos.up()).getBlock() == this ? PierPart.BOTTOM : PierPart.TOP).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+		return super.getStateForPlacement(context).with(PART, world.getBlockState(pos.up()).getBlock() == this ? PierPart.BOTTOM : PierPart.TOP);
 	}
 
 	@Override
@@ -127,48 +124,6 @@ public class BlockPier extends MEBlockFacing implements IBucketPickupHandler, IL
 	{
 		super.fillStateContainer(builder);
 		builder.add(PART);
-		builder.add(WATERLOGGED);
-	}
-
-	@Override
-	public IFluidState getFluidState(IBlockState state)
-	{
-		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
-	}
-
-	@Override
-	public Fluid pickupFluid(IWorld worldIn, BlockPos pos, IBlockState state)
-	{
-		if (state.get(WATERLOGGED))
-		{
-			worldIn.setBlockState(pos, state.with(WATERLOGGED, false), Constants.BlockStateFlags.NOTIFY_AND_UPDATE);
-			return Fluids.WATER;
-		}
-
-		return Fluids.EMPTY;
-	}
-
-	@Override
-	public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, IBlockState state, Fluid fluidIn)
-	{
-		return !state.get(WATERLOGGED) && fluidIn == Fluids.WATER;
-	}
-
-	@Override
-	public boolean receiveFluid(IWorld worldIn, BlockPos pos, IBlockState state, IFluidState fluidStateIn)
-	{
-		if (!state.get(WATERLOGGED) && fluidStateIn.getFluid() == Fluids.WATER)
-		{
-			if (!worldIn.isRemote())
-			{
-				worldIn.setBlockState(pos, state.with(WATERLOGGED, true), Constants.BlockStateFlags.NOTIFY_AND_UPDATE);
-				worldIn.getPendingFluidTicks().scheduleTick(pos, fluidStateIn.getFluid(), fluidStateIn.getFluid().getTickRate(worldIn));
-			}
-
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
