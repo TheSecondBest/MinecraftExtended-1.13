@@ -1,8 +1,12 @@
 {
   "variants": {
-    "facing=north": {"model": "pme:block/pier", "y": 0},
-    "facing=south": {"model": "pme:block/pier", "y": 180},
-    "facing=west": {"model": "pme:block/pier", "y": 90},
-    "facing=east": {"model": "pme:block/pier", "y": 270}
+    "facing=north,part=top": {"model": "pme:block/pier", "y": 0},
+    "facing=south,part=top": {"model": "pme:block/pier", "y": 180},
+    "facing=west,part=top": {"model": "pme:block/pier", "y": 90},
+    "facing=east,part=top": {"model": "pme:block/pier", "y": 270},
+    "facing=north,part=bottom": {"model": "pme:block/pier_legs", "y": 0},
+    "facing=south,part=bottom": {"model": "pme:block/pier_legs", "y": 180},
+    "facing=west,part=bottom": {"model": "pme:block/pier_legs", "y": 90},
+    "facing=east,part=bottom": {"model": "pme:block/pier_legs", "y": 270}
   }
 }
