@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "pme:pier_fence"
+    ]
+  },
+  "criteria": {
+    "has_blocks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:oak_log"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "pme:pier_fence"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blocks",
+      "has_the_recipe"
+    ]
+  ]
+}

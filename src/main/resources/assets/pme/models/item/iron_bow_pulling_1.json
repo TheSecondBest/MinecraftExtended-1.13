@@ -1,0 +1,6 @@
+{
+  "parent": "pme:item/iron_bow",
+  "textures": {
+    "layer0": "pme:item/iron_bow_pulling_1"
+  }
+}

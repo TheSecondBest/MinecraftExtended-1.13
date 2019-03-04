@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "pme:pier"
+    ]
+  },
+  "criteria": {
+    "has_blocks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:oak_slab"
+          },
+          {
+            "item": "minecraft:dark_oak_slab"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "pme:pier"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blocks",
+      "has_the_recipe"
+    ]
+  ]
+}

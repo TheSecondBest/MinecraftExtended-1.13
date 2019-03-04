@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "X": {
+      "item": "pme:iron_bow"
+    },
+    "#": {
+        "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "pme:diamond_bow"
+  }
+}

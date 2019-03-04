@@ -1,0 +1,22 @@
+{
+  "type": "pme:carpenters_table",
+  "pattern": [
+    " XXX ",
+    " X#X ",
+    "  #  ",
+    "  #  "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:fence"
+    },
+    "X": {
+      "item": "minecraft:stained_glass",
+      "data": 7
+    }
+  },
+  "result": {
+    "item": "pme:lamp_post",
+    "count": 12
+  }
+}

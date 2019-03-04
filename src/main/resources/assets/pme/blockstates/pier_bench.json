@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,left=false": { "model": "pme:block/pier_bench_right", "y": 0 },
+    "facing=north,left=true": { "model": "pme:block/pier_bench_left", "y": 0 },
+    "facing=east,left=false": { "model": "pme:block/pier_bench_right", "y": 90 },
+    "facing=east,left=true": { "model": "pme:block/pier_bench_left", "y": 90 },
+    "facing=south,left=false": { "model": "pme:block/pier_bench_right", "y": 180 },
+    "facing=south,left=true": { "model": "pme:block/pier_bench_left", "y": 180 },
+    "facing=west,left=false": { "model": "pme:block/pier_bench_right", "y": 270 },
+    "facing=west,left=true": { "model": "pme:block/pier_bench_left", "y": 270 }
+  }
+}

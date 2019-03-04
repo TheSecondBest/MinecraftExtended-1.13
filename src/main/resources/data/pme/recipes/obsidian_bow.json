@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "X": {
+      "item": "pme:diamond_bow"
+    },
+    "#": {
+      "item": "pme:obsidian_shard"
+    }
+  },
+  "result": {
+    "item": "pme:obsidian_bow"
+  }
+}

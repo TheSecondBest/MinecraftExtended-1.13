@@ -1,0 +1,22 @@
+{
+  "type": "pme:carpenters_table",
+  "pattern": [
+    "#XX#",
+    "#XX#",
+    "#XX#",
+    "#XX#",
+    "    "
+  ],
+  "key": {
+    "#": {
+      "item": "pme:big_oak_log_plank"
+    },
+    "X": {
+      "item": "pme:oak_plank"
+    }
+  },
+  "result": {
+    "item": "pme:pier",
+    "count": 16
+  }
+}

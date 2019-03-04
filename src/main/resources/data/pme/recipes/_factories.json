@@ -1,0 +1,5 @@
+{
+  "recipes": {
+    "carpenters_table": "com.nmg.me.common.crafting.CarpentersRecipeFactory"
+  }
+}

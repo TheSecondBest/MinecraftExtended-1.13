@@ -1,0 +1,23 @@
+{
+  "type": "pme:carpenters_table",
+  "pattern": [
+    "#XX#",
+    "#  #",
+    "#  #",
+    "#XX#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:log",
+      "data": 0
+    },
+    "X": {
+      "item": "minecraft:planks",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "pme:storage_shelf",
+    "count": 4
+  }
+}

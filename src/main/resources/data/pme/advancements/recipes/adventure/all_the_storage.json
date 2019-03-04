@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "item": "pme:storage_key"
+    },
+    "title": {
+      "translate": "advancements.pme.all_the_storage.title"
+    },
+    "description": {
+      "translate": "advancements.pme.all_the_storage.description"
+    }
+  },
+  "parent": "adventure/root",
+  "criteria": {
+    "has_storage_key": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pme:storage_key"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_storage_key"
+    ]
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "solid=true": { "model": "pme:block/pier_base_solid" },
+    "solid=false": { "model": "pme:block/pier_base" }
+  }
+}

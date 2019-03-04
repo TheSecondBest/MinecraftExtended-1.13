@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "pme:pier_glass_pane"
+    ]
+  },
+  "criteria": {
+    "has_blocks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pme:big_oak_log_plank"
+          },
+          {
+            "item": "minecraft:glass"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "pme:pier_glass_pane"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blocks",
+      "has_the_recipe"
+    ]
+  ]
+}

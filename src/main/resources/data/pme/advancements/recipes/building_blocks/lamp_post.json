@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "pme:lamp_post"
+    ]
+  },
+  "criteria": {
+    "has_blocks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:iron_block"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "pme:lamp_post"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blocks",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "pme:pier_stair"
+    ]
+  },
+  "criteria": {
+    "has_pier": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pme:pier"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "pme:pier_stair"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_pier",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "type": "pme:carpenters_table",
+  "pattern": [
+    "####",
+    "#YY#",
+    "#XX#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:log",
+      "data": 0
+    },
+    "X": {
+      "item": "minecraft:planks",
+      "data": 0
+    },
+    "Y": {
+      "item": "minecraft:bookshelf"
+    }
+  },
+  "result": {
+    "item": "pme:pier_bookshelf",
+    "count": 2
+  }
+}

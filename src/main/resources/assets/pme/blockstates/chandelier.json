@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "top=false": { "model": "pme:block/chandelier_base" },
+    "top=true": { "model": "pme:block/chandelier_post" }
+  }
+}

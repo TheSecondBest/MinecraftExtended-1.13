@@ -1,0 +1,6 @@
+{
+  "parent": "pme:item/obsidian_bow",
+  "textures": {
+    "layer0": "pme:item/obsidian_bow_pulling_0"
+  }
+}

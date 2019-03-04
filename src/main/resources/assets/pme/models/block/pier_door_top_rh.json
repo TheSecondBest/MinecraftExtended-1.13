@@ -1,0 +1,64 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+    "textures": {
+        "particle": "block/glass",
+        "0": "block/dark_oak_log",
+        "1": "block/glass",
+        "2": "block/anvil"
+    },
+    "elements": [
+        {
+            "from": [ 0, 0, 5.5 ], 
+            "to": [ 1, 16, 10.5 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 0, 1, 16 ] },
+                "east": { "texture": "#0", "uv": [ 0, 0, 5, 16 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 1, 16 ] },
+                "west": { "texture": "#0", "uv": [ 0, 0, 5, 16 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 1, 5 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 1, 5 ] }
+            }
+        },
+        {
+            "from": [ 15, 0, 5.5 ], 
+            "to": [ 16, 16, 10.5 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 0, 1, 16 ] },
+                "east": { "texture": "#0", "uv": [ 0, 0, 5, 16 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 1, 16 ] },
+                "west": { "texture": "#0", "uv": [ 0, 0, 5, 16 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 1, 5 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 1, 5 ] }
+            }
+        },
+        {
+            "from": [ 1, 15, 5.5 ], 
+            "to": [ 15, 16, 10.5 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0, 0, 14, 1 ] },
+                "south": { "texture": "#0", "uv": [ 0, 0, 14, 1 ] },
+                "up": { "texture": "#0", "uv": [ 0, 0, 14, 5 ] },
+                "down": { "texture": "#0", "uv": [ 0, 0, 14, 5 ] }
+            }
+        },
+        {
+            "from": [ 1, 0, 6.5 ], 
+            "to": [ 15, 15, 9.5 ], 
+            "faces": {
+                "north": { "texture": "#1", "uv": [ 1, 1, 15, 15 ] },
+                "south": { "texture": "#1", "uv": [ 1, 1, 15, 15 ] },
+                "down": { "texture": "#-1", "uv": [ 0, 0, 14, 3 ] }
+            }
+        },
+        {
+            "from": [ 1, 0, 9.5 ], 
+            "to": [ 4, 1, 10.5 ], 
+            "faces": {
+                "east": { "texture": "#2", "uv": [ 0, 0, 1, 1 ] },
+                "south": { "texture": "#2", "uv": [ 0, 0, 3, 1 ] },
+                "up": { "texture": "#2", "uv": [ 0, 0, 3, 1 ] },
+                "down": { "texture": "#2", "uv": [ 0, 0, 3, 1 ] }
+            }
+        }
+    ]
+}

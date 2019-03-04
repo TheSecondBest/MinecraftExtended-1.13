@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": {"model": "pme:block/storage_wall"}
+  }
+}

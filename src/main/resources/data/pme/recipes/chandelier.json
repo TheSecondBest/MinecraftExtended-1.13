@@ -1,0 +1,24 @@
+{
+  "type": "pme:carpenters_table",
+  "pattern": [
+    "  #  ",
+    "T # T",
+    "X # X",
+    " XXX ",
+    "     "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:oak_log"
+    },
+    "X": {
+      "item": "minecraft:oak_planks"
+    },
+    "T": {
+      "item": "minecraft:torch"
+    }
+  },
+  "result": {
+    "item": "pme:chandelier"
+  }
+}

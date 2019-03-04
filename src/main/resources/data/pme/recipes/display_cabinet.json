@@ -1,0 +1,21 @@
+{
+  "type": "pme:carpenters_table",
+  "pattern": [
+    "####",
+    "#XX#",
+    "#XX#",
+    "####"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:oak_log"
+    },
+    "X": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "pme:display_cabinet",
+    "count": 8
+  }
+}

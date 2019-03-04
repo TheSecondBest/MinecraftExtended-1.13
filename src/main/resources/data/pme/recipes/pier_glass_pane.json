@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "#": [
+      {
+        "item": "pme:big_oak_log_plank"
+      }
+    ],
+    "X": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "pme:pier_glass_pane",
+    "count": 6
+  }
+}
