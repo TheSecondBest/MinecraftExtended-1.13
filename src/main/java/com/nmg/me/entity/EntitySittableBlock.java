@@ -1,5 +1,6 @@
 package com.nmg.me.entity;
 
+import com.nmg.me.init.MEEntityTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -14,7 +15,7 @@ public class EntitySittableBlock extends Entity
 
 	public EntitySittableBlock(World worldIn)
 	{
-		super(null, worldIn); // TODO: Create entity type
+		super(MEEntityTypes.SITTABLE_BLOCK, worldIn);
 		this.noClip = true;
 		this.width = 0.01f;
 		this.height = 0.01f;

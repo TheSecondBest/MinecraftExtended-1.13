@@ -1,10 +1,14 @@
 package com.nmg.me.commands;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.nmg.me.init.MEWorldProviders;
 import com.nmg.me.utils.MEUtils;
 import com.nmg.me.world.METeleporter;
 import com.nmg.me.world.storage.WorldStorageSavedData;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -16,11 +20,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandDimensionTeleport// extends CommandBase
+public class DimensionTeleportCommand
 {
+
+	public static void register(CommandDispatcher<CommandSource> dispatcher)
+	{
+		//LiteralCommandNode<CommandSource> literalCommandNode = dispatcher.register(Commands.literal())
+	}
+
 	/*private final List<String> aliases;
 
-	public CommandDimensionTeleport()
+	public DimensionTeleportCommand()
 	{
 		 this.aliases = new ArrayList<>();
 		 this.aliases.add("tpd");

@@ -2,10 +2,7 @@ package com.nmg.me;
 
 import com.nmg.me.event.LootEventHandler;
 import com.nmg.me.handlers.GuiHandler;
-import com.nmg.me.init.MEBlocks;
-import com.nmg.me.init.MEEntityTypes;
-import com.nmg.me.init.MEItems;
-import com.nmg.me.init.METileEntityTypes;
+import com.nmg.me.init.*;
 import com.nmg.me.proxy.ClientProxy;
 import com.nmg.me.proxy.IProxy;
 import com.nmg.me.proxy.ServerProxy;
@@ -16,6 +13,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,7 +41,6 @@ public class MinecraftExtended
 		MinecraftForge.EVENT_BUS.register(new LootEventHandler());
 
 		new METileEntityTypes();
-		new MEEntityTypes();
 	}
 
 	private void setup(final FMLCommonSetupEvent event)
@@ -59,6 +56,11 @@ public class MinecraftExtended
 		TOOLS.setIcon(MEItems.OBSIDIAN_PICKAXE);
 
 		proxy.init();
+	}
+
+	private void serverStarting(final FMLServerStartingEvent event)
+	{
+		MECommands.register(event.getCommandDispatcher());
 	}
 
 }
