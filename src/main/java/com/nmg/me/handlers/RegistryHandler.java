@@ -2,12 +2,9 @@ package com.nmg.me.handlers;
 
 import com.nmg.me.Constants;
 import com.nmg.me.MinecraftExtended;
-import com.nmg.me.init.MEEntityTypes;
+import com.nmg.me.init.*;
 import com.nmg.me.world.biome.MEBiome;
 import com.nmg.me.block.BlockPierDoor;
-import com.nmg.me.init.MEBiomes;
-import com.nmg.me.init.MEBlocks;
-import com.nmg.me.init.MEItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.entity.Entity;
@@ -100,6 +97,30 @@ public class RegistryHandler
 		{
 			MEEntityTypes.register();
 			ENTITY_TYPES.forEach(entityType -> event.getRegistry().register(entityType));
+		}
+	}
+
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+	public static class TileEntityTypes
+	{
+
+		private static final List<TileEntityType<?>> TILE_ENTITY_TYPES = new LinkedList<>();
+
+		public static <T extends TileEntity> void add(TileEntityType<T> type)
+		{
+			TILE_ENTITY_TYPES.add(type);
+		}
+
+		public static List<TileEntityType<?>> getTileEntityTypes()
+		{
+			return Collections.unmodifiableList(TILE_ENTITY_TYPES);
+		}
+
+		@SubscribeEvent
+		public static void registerTileEntityTypes(final RegistryEvent.Register<TileEntityType<?>> event)
+		{
+			METileEntityTypes.register();
+			TILE_ENTITY_TYPES.forEach(tileEntityType -> event.getRegistry().register(tileEntityType));
 		}
 	}
 

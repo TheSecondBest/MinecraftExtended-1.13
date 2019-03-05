@@ -39,8 +39,6 @@ public class MinecraftExtended
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
 		MinecraftForge.EVENT_BUS.register(new LootEventHandler());
-
-		new METileEntityTypes();
 	}
 
 	private void setup(final FMLCommonSetupEvent event)

@@ -1,7 +1,13 @@
 package com.nmg.me.init;
 
+import com.nmg.me.Constants;
+import com.nmg.me.handlers.RegistryHandler;
 import com.nmg.me.tileentity.*;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+
+import java.util.function.Supplier;
 
 public class METileEntityTypes
 {
@@ -15,12 +21,30 @@ public class METileEntityTypes
 
 	static
 	{
-		CRATE = TileEntityType.register("pme:crate", TileEntityType.Builder.create(TileEntityCrate::new));
-		LARGE_CHEST = TileEntityType.register("pme:large_chest", TileEntityType.Builder.create(TileEntityLargeChest::new));
-		BOOKSHELF_CABINET = TileEntityType.register("pme:bookshelf_cabinet", TileEntityType.Builder.create(TileEntityBookshelf.Cabinet::new));
-		BOOKSHELF = TileEntityType.register("pme:bookshelf_shelf", TileEntityType.Builder.create(TileEntityBookshelf.Shelf::new));
-		DISPLAY_CABINET = TileEntityType.register("pme:display_cabinet", TileEntityType.Builder.create(TileEntityDisplayCabinet::new));
-		STORAGE_SHELF = TileEntityType.register("pme:storage_shelf", TileEntityType.Builder.create(TileEntityStorageShelf::new));
+		CRATE = createTileEntityType("crate", TileEntityCrate::new);
+		LARGE_CHEST = createTileEntityType("large_chest", TileEntityLargeChest::new);
+		BOOKSHELF_CABINET = createTileEntityType("bookshelf_cabinet", TileEntityBookshelf.Cabinet::new);
+		BOOKSHELF = createTileEntityType("bookshelf_shelf", TileEntityBookshelf.Shelf::new);
+		DISPLAY_CABINET = createTileEntityType("display_cabinet", TileEntityDisplayCabinet::new);
+		STORAGE_SHELF = createTileEntityType("storage_shelf", TileEntityStorageShelf::new);
+	}
+
+	private static <T extends TileEntity> TileEntityType<T> createTileEntityType(String id, Supplier<T> supplier)
+	{
+		TileEntityType<T> type = TileEntityType.Builder.create(supplier).build(null);
+		type.setRegistryName(new ResourceLocation(Constants.MODID, id));
+
+		return type;
+	}
+
+	public static void register()
+	{
+		RegistryHandler.TileEntityTypes.add(CRATE);
+		RegistryHandler.TileEntityTypes.add(LARGE_CHEST);
+		RegistryHandler.TileEntityTypes.add(BOOKSHELF_CABINET);
+		RegistryHandler.TileEntityTypes.add(BOOKSHELF);
+		RegistryHandler.TileEntityTypes.add(DISPLAY_CABINET);
+		RegistryHandler.TileEntityTypes.add(STORAGE_SHELF);
 	}
 
 }

@@ -164,7 +164,7 @@ public class BlockDisplayCabinet extends MEBlockFacingWaterLogged
 	@Override
 	public void onReplaced(IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving)
 	{
-		if (!worldIn.isRemote)
+		if (!worldIn.isRemote && state.getBlock() != newState.getBlock())
 		{
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
 
@@ -177,9 +177,9 @@ public class BlockDisplayCabinet extends MEBlockFacingWaterLogged
 					this.spawnItem(worldIn, pos, cabinet.removeItem());
 				}
 			}
-		}
 
-		super.onReplaced(state, worldIn, pos, newState, isMoving);
+			super.onReplaced(state, worldIn, pos, newState, isMoving);
+		}
 	}
 
 	private int getCloseSound()
@@ -195,9 +195,6 @@ public class BlockDisplayCabinet extends MEBlockFacingWaterLogged
 	@Override
 	public IBlockState getStateForPlacement(BlockItemUseContext context)
 	{
-		IBlockReader world = context.getWorld();
-		BlockPos pos = context.getPos();
-
 		return super.getStateForPlacement(context).with(OPEN, Boolean.FALSE);
 	}
 

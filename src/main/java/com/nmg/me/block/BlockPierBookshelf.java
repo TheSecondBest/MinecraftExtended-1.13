@@ -132,7 +132,7 @@ public class BlockPierBookshelf extends MEBlockFacing
 	@Override
 	public void onReplaced(IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving)
 	{
-		if (!worldIn.isRemote)
+		if (!worldIn.isRemote && state.getBlock() != newState.getBlock())
 		{
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
 
@@ -147,9 +147,9 @@ public class BlockPierBookshelf extends MEBlockFacing
 
 				shelf.clear();
 			}
-		}
 
-		super.onReplaced(state, worldIn, pos, newState, isMoving);
+			super.onReplaced(state, worldIn, pos, newState, isMoving);
+		}
 	}
 
 	@Override

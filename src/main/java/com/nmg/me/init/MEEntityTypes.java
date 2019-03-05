@@ -48,31 +48,4 @@ public class MEEntityTypes
 		RegistryHandler.EntityTypes.add(GOLD_ARROW);
 	}
 
-	/*public static void registerEntities()
-	{
-		registerEntity("sittable_block", EntitySittableBlock.class, 0);
-		registerEntity("exploding_arrow", EntityExplodingArrow.class, 1, 64, true);
-		registerEntity("diamond_arrow", EntityDiamondArrow.class, 2, 64, true);
-		registerEntity("emerald_arrow", EntityEmeraldArrow.class, 3, 64, true);
-		registerEntity("obsidian_arrow", EntityObsidianArrow.class, 4, 64, true);
-		registerEntity("gold_arrow", EntityGoldArrow.class, 5, 64, true);
-	}
-
-	private static void registerEntity(String name, Class<? extends Entity> entityClass, int id, int trackingRange, boolean sendsVelocityUpdates, int color1, int color2)
-	{
-		ResourceLocation registryName = new ResourceLocation(Constants.MODID + ":" + name);
-		EntityRegistry.registerModEntity(registryName, entityClass, name, id, MinecraftExtended.instance, trackingRange, 1, sendsVelocityUpdates, color1, color2);
-	}
-
-	private static void registerEntity(String name, Class<? extends Entity> entityClass, int id, int trackingRange, boolean sendsVelocityUpdates)
-	{
-		ResourceLocation registryName = new ResourceLocation(Constants.MODID + ":" + name);
-		EntityRegistry.registerModEntity(registryName, entityClass, name, id, MinecraftExtended.instance, trackingRange, 1, sendsVelocityUpdates);
-	}
-
-	private static void registerEntity(String name, Class<? extends Entity> entityClass, int id)
-	{
-		registerEntity(name, entityClass, id, 64, false);
-	}*/
-
 }
