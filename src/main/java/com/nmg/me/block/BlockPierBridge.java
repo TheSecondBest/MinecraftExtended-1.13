@@ -1,6 +1,8 @@
 package com.nmg.me.block;
 
-import com.nmg.me.utils.MEUtils;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.nmg.me.utils.VoxelShapeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
@@ -9,9 +11,12 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockPierBridge extends MEBlockFacing
 {
@@ -21,12 +26,7 @@ public class BlockPierBridge extends MEBlockFacing
 	private static final BooleanProperty SOUTH = BooleanProperty.create("south");
 	private static final BooleanProperty WEST = BooleanProperty.create("west");
 
-	private static final AxisAlignedBB BOUNDING_BOX = MEUtils.calculateAABB(0, 0, 0, 16, 12.75, 16);
-	private static final AxisAlignedBB AABB_BOTTOM = MEUtils.calculateAABB(0, 0, 0, 16, 2, 16);
-	private static final AxisAlignedBB AABB_NORTH_FENCE_LEFT = MEUtils.calculateAABB(0, 2, 0, 1, 10.75, 16);
-	private static final AxisAlignedBB AABB_NORTH_FENCE_RIGHT = MEUtils.calculateAABB(15, 2, 0, 1, 10.75, 16);
-	private static final AxisAlignedBB AABB_EAST_FENCE_LEFT = MEUtils.calculateAABB(0, 2, 0, 16, 10.75, 1);
-	private static final AxisAlignedBB AABB_EAST_FENCE_RIGHT = MEUtils.calculateAABB(0, 2, 15, 16, 10.75, 1);
+	public final ImmutableMap<IBlockState, VoxelShape> SHAPES;
 
 	public BlockPierBridge()
 	{
@@ -37,12 +37,176 @@ public class BlockPierBridge extends MEBlockFacing
 				.with(EAST, Boolean.FALSE)
 				.with(SOUTH, Boolean.FALSE)
 				.with(WEST, Boolean.FALSE));
+
+		SHAPES = this.generateShapes(this.getStateContainer().getValidStates());
 	}
 
-	/*@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	private ImmutableMap<IBlockState, VoxelShape> generateShapes(ImmutableList<IBlockState> states)
 	{
-		return BOUNDING_BOX;
+		final VoxelShape[] POST_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 0, 16, 12, 1.5));
+		final VoxelShape[] POST_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 14.5, 16, 12, 16));
+		final VoxelShape[] RAILING = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 12, 0, 16, 12.75, 16));
+		final VoxelShape[] SUPPORT_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(15, 8, 1.5, 15.5, 9.5, 14.5));
+		final VoxelShape[] SUPPORT_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(15, 4, 1.5, 15.5, 5.5, 14.5));
+		final VoxelShape[] POST_RIGHT_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 2, 0, 1.5, 12, 1.5));
+		final VoxelShape[] POST_RIGHT_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 2, 14.5, 1.5, 12, 16));
+		final VoxelShape[] RAILING_RIGHT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 12, 0, 1.5, 12.75, 16));
+		final VoxelShape[] SUPPORT_RIGHT_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0.5, 8, 1.5, 1, 9.5, 14.5));
+		final VoxelShape[] SUPPORT_RIGHT_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0.5, 4, 1.5, 1, 5.5, 14.5));
+		final VoxelShape[] SUPPORT_RIGHT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 0, 0, 2, 1, 16));
+		final VoxelShape[] SUPPORT_LEFT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14, 0, 0, 16, 1, 16));
+		final VoxelShape[] PLANK_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 0, 16, 2, 2.5));
+		final VoxelShape[] PLANK_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 4.5, 16, 2, 7));
+		final VoxelShape[] PLANK_2 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 9, 16, 2, 11.5));
+		final VoxelShape[] PLANK_3 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 13.5, 16, 2, 16));
+
+		final VoxelShape[] CORNER_POST_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 0, 16, 12, 1.5));
+		final VoxelShape[] CORNER_POST_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 14.5, 16, 12, 16));
+		final VoxelShape[] CORNER_RAILING = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 12, 0, 16, 12.75, 16));
+		final VoxelShape[] CORNER_SUPPORT_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(15, 8, 1.5, 15.5, 9.5, 14.5));
+		final VoxelShape[] CORNER_SUPPORT_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(15, 4, 1.5, 15.5, 5.5, 14.5));
+		final VoxelShape[] CORNER_SUPPORT_2 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(1.5, 8, 15, 14.5, 9.5, 15.5));
+		final VoxelShape[] CORNER_SUPPORT_3 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(1.5, 4, 15, 14.5, 5.5, 15.5));
+		final VoxelShape[] CORNER_POST_2 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 2, 14.5, 1.5, 12, 16));
+		final VoxelShape[] CORNER_RAILING_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 12, 14.5, 14.5, 12.75, 16));
+		final VoxelShape[] CORNER_SUPPORT_RIGHT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 0, 0, 2, 1, 16));
+		final VoxelShape[] CORNER_SUPPORT_LEFT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14, 0, 0, 16, 1, 16));
+		final VoxelShape[] CORNER_PLANK_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 0, 16, 2, 2.5));
+		final VoxelShape[] CORNER_PLANK_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 4.5, 16, 2, 7));
+		final VoxelShape[] CORNER_PLANK_2 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 9, 16, 2, 11.5));
+		final VoxelShape[] CORNER_PLANK_3 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 13.5, 16, 2, 16));
+		final VoxelShape[] CORNER_POST = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 2, 0, 1.5, 12.75, 1.5));
+
+		final VoxelShape[] THREE_WAY_POST_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 2, 0, 1.5, 12, 1.5));
+		final VoxelShape[] THREE_WAY_POST_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 2, 14.5, 1.5, 12, 16));
+		final VoxelShape[] THREE_WAY_RAILING = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 12, 0, 1.5, 12.75, 1.5));
+		final VoxelShape[] THREE_WAY_RAILING_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 12, 14.5, 1.5, 12.75, 16));
+		final VoxelShape[] THREE_WAY_SUPPORT_RIGHT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 0, 0, 2, 1, 16));
+		final VoxelShape[] THREE_WAY_SUPPORT_LEFT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14, 0, 0, 16, 1, 16));
+		final VoxelShape[] THREE_WAY_PLANK_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 0, 16, 2, 2.5));
+		final VoxelShape[] THREE_WAY_PLANK_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 4.5, 16, 2, 7));
+		final VoxelShape[] THREE_WAY_PLANK_2 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 9, 16, 2, 11.5));
+		final VoxelShape[] THREE_WAY_PLANK_3 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 13.5, 16, 2, 16));
+		final VoxelShape[] THREE_WAY_POST_0_RIGHT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 0, 16, 12, 1.5));
+		final VoxelShape[] THREE_WAY_POST_1_RIGHT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 14.5, 16, 12, 16));
+		final VoxelShape[] THREE_WAY_RAILING_RIGHT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 12, 0, 16, 12.75, 16));
+		final VoxelShape[] THREE_WAY_SUPPORT_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(15, 8, 1.5, 15.5, 9.5, 14.5));
+		final VoxelShape[] THREE_WAY_SUPPORT_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(15, 4, 1.5, 15.5, 5.5, 14.5));
+
+		final VoxelShape[] FOUR_WAY_POST_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 2, 0, 1.5, 12, 1.5));
+		final VoxelShape[] FOUR_WAY_POST_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 2, 14.5, 1.5, 12, 16));
+		final VoxelShape[] FOUR_WAY_RAILING = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 12, 0, 1.5, 12.75, 1.5));
+		final VoxelShape[] FOUR_WAY_RAILING_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 12, 14.5, 1.5, 12.75, 16));
+		final VoxelShape[] FOUR_WAY_POST_2 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 14.5, 16, 12, 16));
+		final VoxelShape[] FOUR_WAY_POST_3 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 0, 16, 12, 1.5));
+		final VoxelShape[] FOUR_WAY_RAILING_2 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 12, 0, 16, 12.75, 1.5));
+		final VoxelShape[] FOUR_WAY_RAILING_3 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 12, 14.5, 16, 12.75, 16));
+		final VoxelShape[] FOUR_WAY_SUPPORT_RIGHT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 0, 0, 2, 1, 16));
+		final VoxelShape[] FOUR_WAY_SUPPORT_LEFT = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14, 0, 0, 16, 1, 16));
+		final VoxelShape[] FOUR_WAY_PLANK_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 0, 16, 2, 2.5));
+		final VoxelShape[] FOUR_WAY_PLANK_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 4.5, 16, 2, 7));
+		final VoxelShape[] FOUR_WAY_PLANK_2 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 9, 16, 2, 11.5));
+		final VoxelShape[] FOUR_WAY_PLANK_3 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 13.5, 16, 2, 16));
+
+
+		ImmutableMap.Builder<IBlockState, VoxelShape> builder = new ImmutableMap.Builder<>();
+		for(IBlockState state : states)
+		{
+			EnumFacing facing = state.get(FACING);
+
+			List<VoxelShape> shapes = new ArrayList<>();
+			EnumBridgeShape bridgeShape = this.getShape(state);
+
+			if (bridgeShape == EnumBridgeShape.STRAIGHT)
+			{
+				shapes.add(POST_0[facing.getHorizontalIndex()]);
+				shapes.add(POST_1[facing.getHorizontalIndex()]);
+				shapes.add(RAILING[facing.getHorizontalIndex()]);
+				shapes.add(SUPPORT_0[facing.getHorizontalIndex()]);
+				shapes.add(SUPPORT_1[facing.getHorizontalIndex()]);
+				shapes.add(POST_RIGHT_0[facing.getHorizontalIndex()]);
+				shapes.add(POST_RIGHT_1[facing.getHorizontalIndex()]);
+				shapes.add(RAILING_RIGHT[facing.getHorizontalIndex()]);
+				shapes.add(SUPPORT_RIGHT_0[facing.getHorizontalIndex()]);
+				shapes.add(SUPPORT_RIGHT_1[facing.getHorizontalIndex()]);
+				shapes.add(SUPPORT_RIGHT[facing.getHorizontalIndex()]);
+				shapes.add(SUPPORT_LEFT[facing.getHorizontalIndex()]);
+				shapes.add(PLANK_0[facing.getHorizontalIndex()]);
+				shapes.add(PLANK_1[facing.getHorizontalIndex()]);
+				shapes.add(PLANK_2[facing.getHorizontalIndex()]);
+				shapes.add(PLANK_3[facing.getHorizontalIndex()]);
+			}
+			else if (bridgeShape == EnumBridgeShape.CORNER)
+			{
+				shapes.add(CORNER_POST_0[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_POST_1[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_RAILING[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_SUPPORT_0[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_SUPPORT_1[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_SUPPORT_2[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_SUPPORT_3[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_POST_2[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_RAILING_1[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_SUPPORT_RIGHT[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_SUPPORT_LEFT[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_PLANK_0[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_PLANK_1[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_PLANK_2[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_PLANK_3[facing.getHorizontalIndex()]);
+				shapes.add(CORNER_POST[facing.getHorizontalIndex()]);
+			}
+			else if (bridgeShape == EnumBridgeShape.THREE_WAY)
+			{
+				shapes.add(THREE_WAY_POST_0[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_POST_1[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_RAILING[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_RAILING_1[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_SUPPORT_RIGHT[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_SUPPORT_LEFT[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_PLANK_0[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_PLANK_1[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_PLANK_2[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_PLANK_3[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_POST_0_RIGHT[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_POST_1_RIGHT[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_RAILING_RIGHT[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_SUPPORT_0[facing.getHorizontalIndex()]);
+				shapes.add(THREE_WAY_SUPPORT_1[facing.getHorizontalIndex()]);
+			}
+			else if (bridgeShape == EnumBridgeShape.FOUR_WAY)
+			{
+				shapes.add(FOUR_WAY_POST_0[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_POST_1[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_RAILING[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_RAILING_1[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_POST_2[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_POST_3[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_RAILING_2[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_RAILING_3[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_SUPPORT_RIGHT[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_SUPPORT_LEFT[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_PLANK_0[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_PLANK_1[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_PLANK_2[facing.getHorizontalIndex()]);
+				shapes.add(FOUR_WAY_PLANK_3[facing.getHorizontalIndex()]);
+			}
+
+			builder.put(state, VoxelShapeHelper.combineAll(shapes));
+		}
+
+		return builder.build();
+	}
+
+	@Override
+	public VoxelShape getShape(IBlockState state, IBlockReader reader, BlockPos pos)
+	{
+		return SHAPES.get(state);
+	}
+
+	@Override
+	public VoxelShape getCollisionShape(IBlockState state, IBlockReader reader, BlockPos pos)
+	{
+		return SHAPES.get(state);
 	}
 
 	/*@Override
