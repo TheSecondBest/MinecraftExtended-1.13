@@ -5,11 +5,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.IRecipeContainer;
 
-public class ContainerCarpentersTable extends Container implements IRecipeContainer
+public class ContainerCarpentersTable extends ContainerRecipeBook implements IRecipeContainer
 {
 
 	public InventoryCrafting craftingMatrix = new InventoryCrafting(this, 5, 5);
@@ -159,5 +161,48 @@ public class ContainerCarpentersTable extends Container implements IRecipeContai
 	public InventoryCrafting getCraftMatrix()
 	{
 		return this.craftingMatrix;
+	}
+
+	@Override
+	public void func_201771_a(RecipeItemHelper p_201771_1_)
+	{
+		this.craftingMatrix.fillStackedContents(p_201771_1_);
+	}
+
+	@Override
+	public void clear()
+	{
+		this.craftingMatrix.clear();
+		this.craftingResult.clear();
+	}
+
+	@Override
+	public boolean matches(IRecipe p_201769_1_)
+	{
+		return p_201769_1_.matches(this.craftingMatrix, this.player.world);
+	}
+
+	@Override
+	public int getOutputSlot()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getWidth()
+	{
+		return this.craftingMatrix.getWidth();
+	}
+
+	@Override
+	public int getHeight()
+	{
+		return this.craftingMatrix.getHeight();
+	}
+
+	@Override
+	public int getSize()
+	{
+		return (this.getWidth() * this.getHeight()) + 1;
 	}
 }

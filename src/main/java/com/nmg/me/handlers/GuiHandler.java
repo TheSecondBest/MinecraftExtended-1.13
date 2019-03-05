@@ -42,7 +42,7 @@ public class GuiHandler
 	{
 		registerGui("crate_gui", () -> (playerInv, pos) -> new GuiCrate(new ContainerCrate(playerInv, (TileEntityCrate)playerInv.player.world.getTileEntity(pos)), playerInv));
 		registerGui("large_chest_gui", () -> (playerInv, pos) -> new GuiLargeChest(new ContainerLargeChest(playerInv, (TileEntityLargeChest)playerInv.player.world.getTileEntity(pos)), playerInv));
-		registerGui("carpenters_table_gui", () -> (playerInv, pos) -> new GuiCarpentersTable(playerInv, playerInv.player.world));
+		registerGui("carpenters_table_gui", () -> (playerInv, pos) -> new GuiCarpentersTable(playerInv, playerInv.player.world, pos));
 		registerGui("bookshelf_cabinet_gui", () -> (playerInv, pos) -> new GuiBookshelf(new ContainerBookshelfCabinet(playerInv, (TileEntityBookshelf.Cabinet)playerInv.player.world.getTileEntity(pos)), playerInv));
 	}
 

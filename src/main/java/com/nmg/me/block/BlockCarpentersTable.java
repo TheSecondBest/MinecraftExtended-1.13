@@ -81,9 +81,9 @@ public class BlockCarpentersTable extends MEBlockFacingWaterLogged
 	@Override
 	public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if (!worldIn.isRemote && player instanceof EntityPlayerMP)
+		if (!worldIn.isRemote)
 		{
-			NetworkHooks.openGui((EntityPlayerMP) player, new InteractionObjectCarpentersTable(pos), pos);
+			NetworkHooks.openGui((EntityPlayerMP) player, new InteractionObjectCarpentersTable(worldIn, pos), pos);
 		}
 
 		return true;

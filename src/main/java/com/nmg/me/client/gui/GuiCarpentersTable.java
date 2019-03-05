@@ -18,13 +18,17 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
+@OnlyIn(Dist.CLIENT)
 public class GuiCarpentersTable extends GuiContainer implements IRecipeShownListener
 {
 
 	private static final ResourceLocation CARPENTERS_TABLE_TEXTURES = new ResourceLocation(Constants.MODID, "textures/gui/container/carpenters_table.png");
+	private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
 
 	private final GuiRecipeBook recipeBook = new GuiRecipeBook();
 	private boolean widthTooNarrow;
@@ -48,14 +52,14 @@ public class GuiCarpentersTable extends GuiContainer implements IRecipeShownList
 		this.recipeBook.func_201520_a(this.width, this.height, this.mc, this.widthTooNarrow, (ContainerRecipeBook) this.inventorySlots);
 		this.guiLeft = this.recipeBook.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
 		this.children.add(this.recipeBook);
-		this.addButton(new GuiButtonImage(10, this.guiLeft + 8, this.height / 2 - 49, 20, 18, 0, 202, 19, CARPENTERS_TABLE_TEXTURES)
+		this.addButton(new GuiButtonImage(10, this.guiLeft + 5, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE)
 		{
 			@Override
 			public void onClick(double mouseX, double mouseY)
 			{
 				GuiCarpentersTable.this.recipeBook.func_201518_a(GuiCarpentersTable.this.widthTooNarrow);
 				GuiCarpentersTable.this.recipeBook.toggleVisibility();
-				GuiCarpentersTable.this.guiLeft = GuiCarpentersTable.this.recipeBook.updateScreenPosition(GuiCarpentersTable.this.widthTooNarrow, GuiCarpentersTable.this.width, GuiCarpentersTable.this.height);
+				GuiCarpentersTable.this.guiLeft = GuiCarpentersTable.this.recipeBook.updateScreenPosition(GuiCarpentersTable.this.widthTooNarrow, GuiCarpentersTable.this.width, GuiCarpentersTable.this.xSize);
 				this.setPosition(GuiCarpentersTable.this.guiLeft + 5, GuiCarpentersTable.this.height / 2 - 49);
 			}
 		});
@@ -104,10 +108,11 @@ public class GuiCarpentersTable extends GuiContainer implements IRecipeShownList
 		}
 		else
 		{
-			return this.widthTooNarrow && this.recipeBook.isVisible() ? true : super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
+			return this.widthTooNarrow && this.recipeBook.isVisible() || super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
 		}
 	}
 
+	@Override
 	protected boolean func_195361_a(double p_195361_1_, double p_195361_3_, int p_195361_5_, int p_195361_6_, int p_195361_7_)
 	{
 		boolean flag = p_195361_1_ < (double) p_195361_5_ || p_195361_3_ < (double) p_195361_6_ || p_195361_1_ >= (double) (p_195361_5_ + this.xSize) || p_195361_3_ >= (double) (p_195361_6_ + this.ySize);

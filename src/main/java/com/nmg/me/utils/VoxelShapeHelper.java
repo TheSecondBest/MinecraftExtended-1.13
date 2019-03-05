@@ -28,6 +28,7 @@ public class VoxelShapeHelper
 		VoxelShape shapeEast = rotateShape(source, EnumFacing.EAST);
 		VoxelShape shapeSouth = rotateShape(source, EnumFacing.SOUTH);
 		VoxelShape shapeWest = rotateShape(source, EnumFacing.WEST);
+
 		return new VoxelShape[]{ shapeWest, shapeNorth, shapeEast, shapeSouth };
 	}
 

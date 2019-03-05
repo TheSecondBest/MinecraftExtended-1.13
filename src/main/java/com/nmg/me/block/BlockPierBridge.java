@@ -1,12 +1,12 @@
 package com.nmg.me.block;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.nmg.me.utils.VoxelShapeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.EnumFacing;
@@ -14,9 +14,12 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BlockPierBridge extends MEBlockFacing
 {
@@ -26,7 +29,7 @@ public class BlockPierBridge extends MEBlockFacing
 	private static final BooleanProperty SOUTH = BooleanProperty.create("south");
 	private static final BooleanProperty WEST = BooleanProperty.create("west");
 
-	public final ImmutableMap<IBlockState, VoxelShape> SHAPES;
+	private final Map<EnumFacing, VoxelShape[]> SHAPES;
 
 	public BlockPierBridge()
 	{
@@ -41,7 +44,38 @@ public class BlockPierBridge extends MEBlockFacing
 		SHAPES = this.generateShapes(this.getStateContainer().getValidStates());
 	}
 
-	private ImmutableMap<IBlockState, VoxelShape> generateShapes(ImmutableList<IBlockState> states)
+	private static int getMask(EnumFacing facing)
+	{
+		return 1 << facing.getHorizontalIndex();
+	}
+
+	protected int getIndex(IBlockState state)
+	{
+		int i = 0;
+		if (state.get(NORTH))
+		{
+			i |= getMask(EnumFacing.NORTH);
+		}
+
+		if (state.get(EAST))
+		{
+			i |= getMask(EnumFacing.EAST);
+		}
+
+		if (state.get(SOUTH))
+		{
+			i |= getMask(EnumFacing.SOUTH);
+		}
+
+		if (state.get(WEST))
+		{
+			i |= getMask(EnumFacing.WEST);
+		}
+
+		return i;
+	}
+
+	private Map<EnumFacing, VoxelShape[]> generateShapes(ImmutableList<IBlockState> states)
 	{
 		final VoxelShape[] POST_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 0, 16, 12, 1.5));
 		final VoxelShape[] POST_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(14.5, 2, 14.5, 16, 12, 16));
@@ -108,14 +142,20 @@ public class BlockPierBridge extends MEBlockFacing
 		final VoxelShape[] FOUR_WAY_PLANK_2 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 9, 16, 2, 11.5));
 		final VoxelShape[] FOUR_WAY_PLANK_3 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 1, 13.5, 16, 2, 16));
 
+		Map<EnumFacing, VoxelShape[]> result = new HashMap<>();
+		result.put(EnumFacing.NORTH, new VoxelShape[states.size()]);
+		result.put(EnumFacing.EAST, new VoxelShape[states.size()]);
+		result.put(EnumFacing.SOUTH, new VoxelShape[states.size()]);
+		result.put(EnumFacing.WEST, new VoxelShape[states.size()]);
 
-		ImmutableMap.Builder<IBlockState, VoxelShape> builder = new ImmutableMap.Builder<>();
-		for(IBlockState state : states)
+		for (IBlockState state : states)
 		{
+			List<VoxelShape> shapes = new ArrayList<>();
+
 			EnumFacing facing = state.get(FACING);
 
-			List<VoxelShape> shapes = new ArrayList<>();
 			EnumBridgeShape bridgeShape = this.getShape(state);
+			int index = this.getIndex(state);
 
 			if (bridgeShape == EnumBridgeShape.STRAIGHT)
 			{
@@ -191,118 +231,94 @@ public class BlockPierBridge extends MEBlockFacing
 				shapes.add(FOUR_WAY_PLANK_3[facing.getHorizontalIndex()]);
 			}
 
-			builder.put(state, VoxelShapeHelper.combineAll(shapes));
+			result.get(facing)[index] = VoxelShapeHelper.combineAll(shapes);
 		}
 
-		return builder.build();
+		return result;
 	}
 
 	@Override
 	public VoxelShape getShape(IBlockState state, IBlockReader reader, BlockPos pos)
 	{
-		return SHAPES.get(state);
-	}
+		EnumBridgeShape shape = this.getShape(state);
 
-	@Override
-	public VoxelShape getCollisionShape(IBlockState state, IBlockReader reader, BlockPos pos)
-	{
-		return SHAPES.get(state);
-	}
-
-	/*@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState)
-	{
-		addCollisionBoxToList(pos, entityBox, collidingBoxes, AABB_BOTTOM);
-		IBlockState actualState = this.getActualState(state, worldIn, pos);
-		EnumBridgeShape shape = this.getShape(actualState);
-
-		for (AxisAlignedBB collisionBox : this.getCollisionBoxesForShape(shape, actualState))
+		if (shape == EnumBridgeShape.FOUR_WAY)
 		{
-			addCollisionBoxToList(pos, entityBox, collidingBoxes, collisionBox);
+			return SHAPES.get(state.get(FACING))[this.getIndex(state)];
 		}
+
+		return this.getShapeFromNeighbors(shape, state);
 	}
 
-	private List<AxisAlignedBB> getCollisionBoxesForShape(EnumBridgeShape shape, IBlockState state)
+	private VoxelShape getShapeFromNeighbors(EnumBridgeShape shape, IBlockState state)
 	{
-		List<AxisAlignedBB> collisionBoxes = new ArrayList<>();
-
-		boolean north = state.getValue(NORTH);
-		boolean east = state.getValue(EAST);
-		boolean south = state.getValue(SOUTH);
-		boolean west = state.getValue(WEST);
+		boolean north = state.get(NORTH);
+		boolean east = state.get(EAST);
+		boolean south = state.get(SOUTH);
+		boolean west = state.get(WEST);
 
 		if (shape == EnumBridgeShape.STRAIGHT)
 		{
 			if (north || south)
 			{
-				collisionBoxes.add(AABB_NORTH_FENCE_LEFT);
-				collisionBoxes.add(AABB_NORTH_FENCE_RIGHT);
+				return SHAPES.get(EnumFacing.NORTH)[this.getIndex(state)];
 			}
 			else if (east || west)
 			{
-				collisionBoxes.add(AABB_EAST_FENCE_LEFT);
-				collisionBoxes.add(AABB_EAST_FENCE_RIGHT);
+				return SHAPES.get(EnumFacing.EAST)[this.getIndex(state)];
 			}
 			else
 			{
-				EnumFacing facing = state.getValue(FACING);
-
-				if (facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH)
-				{
-					collisionBoxes.add(AABB_NORTH_FENCE_LEFT);
-					collisionBoxes.add(AABB_NORTH_FENCE_RIGHT);
-				}
-				else if (facing == EnumFacing.EAST || facing == EnumFacing.WEST)
-				{
-					collisionBoxes.add(AABB_EAST_FENCE_LEFT);
-					collisionBoxes.add(AABB_EAST_FENCE_RIGHT);
-				}
+				return SHAPES.get(state.get(FACING))[this.getIndex(state)];
 			}
 		}
 		else if (shape == EnumBridgeShape.CORNER)
 		{
 			if (south)
 			{
-				collisionBoxes.add(AABB_EAST_FENCE_LEFT);
-
 				if (east)
-					collisionBoxes.add(AABB_NORTH_FENCE_LEFT);
+				{
+					return SHAPES.get(EnumFacing.SOUTH)[this.getIndex(state)];
+				}
 				else if (west)
-					collisionBoxes.add(AABB_NORTH_FENCE_RIGHT);
+				{
+					return SHAPES.get(EnumFacing.WEST)[this.getIndex(state)];
+				}
 			}
 			else if (north)
 			{
-				collisionBoxes.add(AABB_EAST_FENCE_RIGHT);
-
 				if (east)
-					collisionBoxes.add(AABB_NORTH_FENCE_LEFT);
+				{
+					return SHAPES.get(EnumFacing.EAST)[this.getIndex(state)];
+				}
 				else if (west)
-					collisionBoxes.add(AABB_NORTH_FENCE_RIGHT);
+				{
+					return SHAPES.get(EnumFacing.NORTH)[this.getIndex(state)];
+				}
 			}
 		}
 		else if (shape == EnumBridgeShape.THREE_WAY)
 		{
-
 			if (north && !east && south && west)
 			{
-				collisionBoxes.add(AABB_NORTH_FENCE_RIGHT);
+				return SHAPES.get(EnumFacing.NORTH)[this.getIndex(state)];
 			}
 			else if (north && east && south && !west)
 			{
-				collisionBoxes.add(AABB_NORTH_FENCE_LEFT);
+				return SHAPES.get(EnumFacing.SOUTH)[this.getIndex(state)];
 			}
 			else if (!north && east && south && west)
 			{
-				collisionBoxes.add(AABB_EAST_FENCE_LEFT);
+				return SHAPES.get(EnumFacing.WEST)[this.getIndex(state)];
 			}
 			else if (north && east && !south && west)
 			{
-				collisionBoxes.add(AABB_EAST_FENCE_RIGHT);
+				return SHAPES.get(EnumFacing.EAST)[this.getIndex(state)];
 			}
 		}
 
-		return collisionBoxes;
-	}*/
+		return SHAPES.get(state.get(FACING))[this.getIndex(state)];
+	}
 
 	private boolean isFourWay(IBlockState state)
 	{
@@ -368,10 +384,30 @@ public class BlockPierBridge extends MEBlockFacing
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockReader world, BlockPos pos)
 	{
-		return state.with(NORTH, this.canConnect(world, pos.north()))
+		return state.with(FACING, state.get(FACING))
+				.with(NORTH, this.canConnect(world, pos.north()))
 				.with(EAST, this.canConnect(world, pos.east()))
 				.with(SOUTH, this.canConnect(world, pos.south()))
 				.with(WEST, this.canConnect(world, pos.west()));
+	}
+
+	@Override
+	public IBlockState getStateForPlacement(BlockItemUseContext context)
+	{
+		return super.getStateForPlacement(context)
+				.with(NORTH, this.canConnect(context.getWorld(), context.getPos().north()))
+				.with(EAST, this.canConnect(context.getWorld(), context.getPos().east()))
+				.with(SOUTH, this.canConnect(context.getWorld(), context.getPos().south()))
+				.with(WEST, this.canConnect(context.getWorld(), context.getPos().west()));
+	}
+
+	@Override
+	public IBlockState updatePostPlacement(IBlockState stateIn, EnumFacing facing, IBlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
+	{
+		return facing.getAxis().getPlane() == EnumFacing.Plane.HORIZONTAL ? stateIn.with(NORTH, this.canConnect(worldIn, currentPos.north()))
+				.with(EAST, this.canConnect(worldIn, currentPos.east()))
+				.with(SOUTH, this.canConnect(worldIn, currentPos.south()))
+				.with(WEST, this.canConnect(worldIn, currentPos.west())) : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 	}
 
 	private boolean canConnect(IBlockReader worldIn, BlockPos pos)
