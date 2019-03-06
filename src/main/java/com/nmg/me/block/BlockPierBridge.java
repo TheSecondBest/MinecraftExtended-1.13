@@ -6,8 +6,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -21,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BlockPierBridge extends MEBlockFacing
+public class BlockPierBridge extends MEBlockFacingWaterLogged
 {
 
 	private static final BooleanProperty NORTH = BooleanProperty.create("north");
@@ -29,19 +31,25 @@ public class BlockPierBridge extends MEBlockFacing
 	private static final BooleanProperty SOUTH = BooleanProperty.create("south");
 	private static final BooleanProperty WEST = BooleanProperty.create("west");
 
+	public static final EnumProperty<BlockPier.PierPart> PART = EnumProperty.create("part", BlockPier.PierPart.class);
+
 	private final Map<EnumFacing, VoxelShape[]> SHAPES;
+	private final VoxelShape LEG_SHAPE;
 
 	public BlockPierBridge()
 	{
 		super(Properties.create(Material.WOOD).hardnessAndResistance(2.0f));
 		this.setDefaultState(this.getStateContainer().getBaseState()
 				.with(FACING, EnumFacing.NORTH)
-				.with(NORTH, Boolean.FALSE)
-				.with(EAST, Boolean.FALSE)
-				.with(SOUTH, Boolean.FALSE)
-				.with(WEST, Boolean.FALSE));
+				.with(NORTH, false)
+				.with(EAST, false)
+				.with(SOUTH, false)
+				.with(WEST, false)
+				.with(PART, BlockPier.PierPart.TOP)
+				.with(WATERLOGGED, false));
 
 		SHAPES = this.generateShapes(this.getStateContainer().getValidStates());
+		LEG_SHAPE = this.getLegShape();
 	}
 
 	private static int getMask(EnumFacing facing)
@@ -73,6 +81,17 @@ public class BlockPierBridge extends MEBlockFacing
 		}
 
 		return i;
+	}
+
+	private VoxelShape getLegShape()
+	{
+		List<VoxelShape> shapes = new ArrayList<>();
+		shapes.add(Block.makeCuboidShape(1, 0, 1, 3, 14, 3));
+		shapes.add(Block.makeCuboidShape(13, 0, 1, 15, 14, 3));
+		shapes.add(Block.makeCuboidShape(13, 0, 13, 15, 14, 15));
+		shapes.add(Block.makeCuboidShape(1, 0, 13, 3, 14, 15));
+
+		return VoxelShapeHelper.combineAll(shapes);
 	}
 
 	private Map<EnumFacing, VoxelShape[]> generateShapes(ImmutableList<IBlockState> states)
@@ -150,10 +169,12 @@ public class BlockPierBridge extends MEBlockFacing
 
 		for (IBlockState state : states)
 		{
+			if (state.get(PART) == BlockPier.PierPart.BOTTOM)
+				continue;
+
 			List<VoxelShape> shapes = new ArrayList<>();
 
 			EnumFacing facing = state.get(FACING);
-
 			EnumBridgeShape bridgeShape = this.getShape(state);
 			int index = this.getIndex(state);
 
@@ -241,6 +262,11 @@ public class BlockPierBridge extends MEBlockFacing
 	public VoxelShape getShape(IBlockState state, IBlockReader reader, BlockPos pos)
 	{
 		EnumBridgeShape shape = this.getShape(state);
+
+		if (state.get(PART) == BlockPier.PierPart.BOTTOM)
+		{
+			return LEG_SHAPE;
+		}
 
 		if (shape == EnumBridgeShape.FOUR_WAY)
 		{
@@ -394,35 +420,46 @@ public class BlockPierBridge extends MEBlockFacing
 	@Override
 	public IBlockState getStateForPlacement(BlockItemUseContext context)
 	{
+		IBlockReader world = context.getWorld();
+		BlockPos pos = context.getPos();
+
 		return super.getStateForPlacement(context)
-				.with(NORTH, this.canConnect(context.getWorld(), context.getPos().north()))
-				.with(EAST, this.canConnect(context.getWorld(), context.getPos().east()))
-				.with(SOUTH, this.canConnect(context.getWorld(), context.getPos().south()))
-				.with(WEST, this.canConnect(context.getWorld(), context.getPos().west()));
+				.with(NORTH, this.canConnect(world, pos.north()))
+				.with(EAST, this.canConnect(world, pos.east()))
+				.with(SOUTH, this.canConnect(world, pos.south()))
+				.with(WEST, this.canConnect(world, pos.west()))
+				.with(PART, world.getBlockState(pos.up()).getBlock() == this ? BlockPier.PierPart.BOTTOM : BlockPier.PierPart.TOP);
 	}
 
 	@Override
 	public IBlockState updatePostPlacement(IBlockState stateIn, EnumFacing facing, IBlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
 	{
+		if (stateIn.get(WATERLOGGED))
+		{
+			worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+		}
+
 		return facing.getAxis().getPlane() == EnumFacing.Plane.HORIZONTAL ? stateIn.with(NORTH, this.canConnect(worldIn, currentPos.north()))
 				.with(EAST, this.canConnect(worldIn, currentPos.east()))
 				.with(SOUTH, this.canConnect(worldIn, currentPos.south()))
-				.with(WEST, this.canConnect(worldIn, currentPos.west())) : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+				.with(WEST, this.canConnect(worldIn, currentPos.west())) : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos).with(PART, worldIn.getBlockState(currentPos.up()).getBlock() == this ? BlockPier.PierPart.BOTTOM : BlockPier.PierPart.TOP);
 	}
 
 	private boolean canConnect(IBlockReader worldIn, BlockPos pos)
 	{
-		return worldIn.getBlockState(pos).getBlock() instanceof BlockPierBridge;
+		IBlockState state = worldIn.getBlockState(pos);
+		return state.getBlock() instanceof BlockPierBridge && state.get(PART) == BlockPier.PierPart.TOP;
 	}
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder)
 	{
-		builder.add(FACING);
+		super.fillStateContainer(builder);
 		builder.add(NORTH);
 		builder.add(EAST);
 		builder.add(SOUTH);
 		builder.add(WEST);
+		builder.add(PART);
 	}
 
 	@Override

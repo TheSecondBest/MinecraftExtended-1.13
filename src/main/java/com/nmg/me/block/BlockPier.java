@@ -3,6 +3,7 @@ package com.nmg.me.block;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.nmg.me.Constants;
+import com.nmg.me.init.MEBlocks;
 import com.nmg.me.utils.VoxelShapeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.IBucketPickupHandler;
@@ -116,7 +117,13 @@ public class BlockPier extends MEBlockFacingWaterLogged
 			worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
 		}
 
-		return facing.getAxis().getPlane() == EnumFacing.Plane.VERTICAL ? stateIn.with(PART, worldIn.getBlockState(currentPos.up()).getBlock() == this ? PierPart.BOTTOM : PierPart.TOP) : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+		return facing.getAxis().getPlane() == EnumFacing.Plane.VERTICAL ? stateIn.with(PART, this.canConnect(worldIn, currentPos.up()) ? PierPart.BOTTOM : PierPart.TOP) : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+	}
+
+	private boolean canConnect(IWorld world, BlockPos pos)
+	{
+		Block block = world.getBlockState(pos).getBlock();
+		return block == this || block == MEBlocks.PIER_BRIDGE;
 	}
 
 	@Override

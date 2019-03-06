@@ -19,13 +19,14 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockPierChair extends MEBlockFacing
+public class BlockPierChair extends MEBlockFacingWaterLogged
 {
 	private final ImmutableMap<IBlockState, VoxelShape> SHAPES;
 
 	public BlockPierChair()
 	{
 		super(Properties.create(Material.WOOD).hardnessAndResistance(2.0f));
+		this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH).with(WATERLOGGED, false));
 		SHAPES = this.generateShapes(this.getStateContainer().getValidStates());
 	}
 

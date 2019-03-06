@@ -30,7 +30,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockBarrel extends Block
+public class BlockBarrel extends MEBlockWaterLogged
 {
 
 	private static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, 3);
@@ -39,7 +39,7 @@ public class BlockBarrel extends Block
 	public BlockBarrel()
 	{
 		super(Properties.create(Material.WOOD).hardnessAndResistance(2.0f));
-		this.setDefaultState(this.getStateContainer().getBaseState().with(LEVEL, 0));
+		this.setDefaultState(this.getStateContainer().getBaseState().with(LEVEL, 0).with(WATERLOGGED, false));
 		SHAPE = this.generateShape();
 	}
 
@@ -254,6 +254,7 @@ public class BlockBarrel extends Block
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder)
 	{
+		super.fillStateContainer(builder);
 		builder.add(LEVEL);
 	}
 
