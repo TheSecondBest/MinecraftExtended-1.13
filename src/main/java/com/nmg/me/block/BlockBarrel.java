@@ -1,6 +1,7 @@
 package com.nmg.me.block;
 
 import com.nmg.me.Constants;
+import com.nmg.me.utils.VoxelShapeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
@@ -20,18 +21,48 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockBarrel extends Block
 {
 
 	private static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, 3);
+	private final VoxelShape SHAPE;
 
 	public BlockBarrel()
 	{
 		super(Properties.create(Material.WOOD).hardnessAndResistance(2.0f));
 		this.setDefaultState(this.getStateContainer().getBaseState().with(LEVEL, 0));
+		SHAPE = this.generateShape();
+	}
+
+	private VoxelShape generateShape()
+	{
+		List<VoxelShape> shapes = new ArrayList<>();
+		shapes.add(Block.makeCuboidShape(1, 1, 1, 15, 15, 2)); // WALL_N
+		shapes.add(Block.makeCuboidShape(1, 1, 14, 15, 15, 15)); // WALL_S
+		shapes.add(Block.makeCuboidShape(1, 0, 1, 15, 1, 15)); // FLOOR
+		shapes.add(Block.makeCuboidShape(1, 1, 2, 2, 15, 14)); // WALL_W
+		shapes.add(Block.makeCuboidShape(14, 1, 2, 15, 15, 14)); // WALL_E
+		shapes.add(Block.makeCuboidShape(1, 15, 1, 15, 16, 2)); // RIM_N
+		shapes.add(Block.makeCuboidShape(1, 15, 14, 15, 16, 15)); // RIM_S
+		shapes.add(Block.makeCuboidShape(1, 15, 2, 2, 16, 14)); // RIM_W
+		shapes.add(Block.makeCuboidShape(14, 15, 2, 15, 16, 14)); // RIM_E
+
+		return VoxelShapeHelper.combineAll(shapes);
+	}
+
+	@Override
+	public VoxelShape getShape(IBlockState state, IBlockReader reader, BlockPos pos)
+	{
+		return SHAPE;
 	}
 
 	@Override

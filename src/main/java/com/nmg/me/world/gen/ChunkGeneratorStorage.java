@@ -1,34 +1,83 @@
 package com.nmg.me.world.gen;
 
 import com.nmg.me.init.MEBlocks;
+import com.nmg.me.world.gen.settings.StorageGenSettings;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.gen.*;
+import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructureStart;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class ChunkGeneratorStorage //implements IChunkGenerator
+public class ChunkGeneratorStorage extends AbstractChunkGenerator<StorageGenSettings>
 {
 
-
-	/*private static final int STORAGE_CELL_Y = 64;
+	private static final int STORAGE_CELL_Y = 64;
 	private static final int STORAGE_CELL_HEIGHT = 32;
 	private static final int STORAGE_CELL_SIZE = 16;
 
-	private final World world;
-
-	public ChunkGeneratorStorage(World world, long seed)
+	public ChunkGeneratorStorage(IWorld worldIn, BiomeProvider biomeProviderIn)
 	{
-		this.world = world;
+		super(worldIn, biomeProviderIn);
 	}
 
 	@Override
+	public void makeBase(IChunk chunkIn)
+	{
+
+	}
+
+	@Override
+	public void spawnMobs(WorldGenRegion region)
+	{
+
+	}
+
+	@Override
+	public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
+	{
+		return null;
+	}
+
+	@Override
+	public StorageGenSettings getSettings()
+	{
+		return null;
+	}
+
+	@Override
+	public int spawnMobs(World worldIn, boolean spawnHostileMobs, boolean spawnPeacefulMobs)
+	{
+		return 0;
+	}
+
+	@Override
+	public int getGroundHeight()
+	{
+		return 0;
+	}
+
+	@Override
+	public double[] generateNoiseRegion(int x, int z)
+	{
+		return new double[0];
+	}
+
+
+	/*@Override
 	public Chunk generateChunk(int x, int z)
 	{
 		ChunkPrimer chunkPrimer = new ChunkPrimer();

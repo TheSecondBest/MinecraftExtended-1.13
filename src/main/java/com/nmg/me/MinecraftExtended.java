@@ -2,11 +2,13 @@ package com.nmg.me;
 
 import com.nmg.me.event.LootEventHandler;
 import com.nmg.me.handlers.GuiHandler;
+import com.nmg.me.handlers.RegistryHandler;
 import com.nmg.me.init.*;
 import com.nmg.me.proxy.ClientProxy;
 import com.nmg.me.proxy.IProxy;
 import com.nmg.me.proxy.ServerProxy;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -38,6 +40,7 @@ public class MinecraftExtended
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
+		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new LootEventHandler());
 	}
 
@@ -56,9 +59,10 @@ public class MinecraftExtended
 		proxy.init();
 	}
 
-	private void serverStarting(final FMLServerStartingEvent event)
+	@SubscribeEvent
+	public void serverStarting(FMLServerStartingEvent event)
 	{
-		MECommands.register(event.getCommandDispatcher());
+		//MECommands.register(event.getCommandDispatcher());
 	}
 
 }

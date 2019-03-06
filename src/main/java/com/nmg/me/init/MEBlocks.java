@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.BiomeColors;
 
 public class MEBlocks
 {
@@ -90,6 +91,7 @@ public class MEBlocks
 		// README: Always register stair LAST
 
 		registerBlock("pier_stair", PIER_STAIR);
+
 	}
 
 	private static void registerBlock(String id, Block block)

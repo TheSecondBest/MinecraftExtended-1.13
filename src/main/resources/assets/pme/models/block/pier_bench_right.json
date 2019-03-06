@@ -1,5 +1,4 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "textures": {
         "0": "block/dark_oak_log",
         "1": "block/oak_planks",

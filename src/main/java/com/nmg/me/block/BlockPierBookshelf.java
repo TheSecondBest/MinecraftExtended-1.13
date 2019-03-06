@@ -1,10 +1,13 @@
 package com.nmg.me.block;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.nmg.me.Constants;
 import com.nmg.me.client.gui.interactionobjects.InteractionObjectBookshelf;
 import com.nmg.me.init.MEBlocks;
 import com.nmg.me.tileentity.TileEntityBookshelf;
 import com.nmg.me.utils.MEUtils;
+import com.nmg.me.utils.VoxelShapeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -23,6 +26,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.IWorldReaderBase;
@@ -30,46 +34,70 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockPierBookshelf extends MEBlockFacing
 {
 
 	private static final BooleanProperty TOP = BooleanProperty.create("top");
 
-	private static final AxisAlignedBB BOUNDING_BOX_NORTH_TOP = MEUtils.calculateAABB(0, 0, 0, 16, 16, 7);
-	private static final AxisAlignedBB BOUNDING_BOX_NORTH_BOTTOM = MEUtils.calculateAABB(0, 0, 0, 16, 16, 14);
-	private static final AxisAlignedBB BOUNDING_BOX_EAST_TOP = MEUtils.calculateAABB(9, 0, 0, 7, 16, 16);
-	private static final AxisAlignedBB BOUNDING_BOX_EAST_BOTTOM = MEUtils.calculateAABB(2, 0, 0, 14, 16, 16);
-	private static final AxisAlignedBB BOUNDING_BOX_SOUTH_TOP = MEUtils.calculateAABB(0, 0, 9, 16, 16, 7);
-	private static final AxisAlignedBB BOUNDING_BOX_SOUTH_BOTTOM = MEUtils.calculateAABB(0, 0, 2, 16, 16, 14);
-	private static final AxisAlignedBB BOUNDING_BOX_WEST_TOP = MEUtils.calculateAABB(0, 0, 0, 7, 16, 16);
-	private static final AxisAlignedBB BOUNDING_BOX_WEST_BOTTOM = MEUtils.calculateAABB(0, 0, 0, 14, 16, 16);
+	private final ImmutableMap<IBlockState, VoxelShape> SHAPES;
 
 	public BlockPierBookshelf()
 	{
 		super(Properties.create(Material.WOOD));
 		this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH).with(TOP, Boolean.FALSE));
+		SHAPES = this.generateShapes(this.getStateContainer().getValidStates());
 	}
 
-	/*@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	private ImmutableMap<IBlockState, VoxelShape> generateShapes(ImmutableList<IBlockState> states)
 	{
-		boolean top = state.getValue(TOP);
+		ImmutableMap.Builder<IBlockState, VoxelShape> builder = new ImmutableMap.Builder<>();
 
-		switch (state.getValue(FACING))
+		final VoxelShape[] CABINET_CUBE = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 0, 0, 16, 16, 13));
+		final VoxelShape[] CABINET_DOOR = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(1, 1, 13, 15, 15, 14));
+		final VoxelShape[] CABINET_HANDLE = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(13, 8, 14, 14, 12, 15));
+
+		final VoxelShape[] SHELF_WALL_BACK = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 0, 0, 16, 16, 1));
+		final VoxelShape[] SHELF_WALL_SIDE_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(0, 0, 1, 1, 16, 7));
+		final VoxelShape[] SHELF_WALL_SIDE_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(15, 0, 1, 16, 16, 7));
+		final VoxelShape[] SHELF_TOP = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(1, 15, 1, 15, 16, 7));
+		final VoxelShape[] SHELF_SHELF_0 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(1, 3.5, 1, 15, 4.5, 7));
+		final VoxelShape[] SHELF_SHELF_1 = VoxelShapeHelper.getRotatedVoxelShapes(Block.makeCuboidShape(1, 9.5, 1, 15, 10.5, 7));
+
+		for (IBlockState state : states)
 		{
-			case NORTH:
-				return top ? BOUNDING_BOX_NORTH_TOP : BOUNDING_BOX_NORTH_BOTTOM;
-			case EAST:
-				return top ? BOUNDING_BOX_EAST_TOP : BOUNDING_BOX_EAST_BOTTOM;
-			case SOUTH:
-				return top ? BOUNDING_BOX_SOUTH_TOP : BOUNDING_BOX_SOUTH_BOTTOM;
-			case WEST:
-				return top ? BOUNDING_BOX_WEST_TOP : BOUNDING_BOX_WEST_BOTTOM;
+			List<VoxelShape> shapes = new ArrayList<>();
+			EnumFacing facing = state.get(FACING);
+
+			if (state.get(TOP))
+			{
+				shapes.add(SHELF_WALL_BACK[facing.getHorizontalIndex()]);
+				shapes.add(SHELF_WALL_SIDE_0[facing.getHorizontalIndex()]);
+				shapes.add(SHELF_WALL_SIDE_1[facing.getHorizontalIndex()]);
+				shapes.add(SHELF_TOP[facing.getHorizontalIndex()]);
+				shapes.add(SHELF_SHELF_0[facing.getHorizontalIndex()]);
+				shapes.add(SHELF_SHELF_1[facing.getHorizontalIndex()]);
+			}
+			else
+			{
+				shapes.add(CABINET_CUBE[facing.getHorizontalIndex()]);
+				shapes.add(CABINET_DOOR[facing.getHorizontalIndex()]);
+				shapes.add(CABINET_HANDLE[facing.getHorizontalIndex()]);
+			}
+
+			builder.put(state, VoxelShapeHelper.combineAll(shapes));
 		}
 
-		return FULL_BLOCK_AABB;
-	}*/
+		return builder.build();
+	}
+
+	@Override
+	public VoxelShape getShape(IBlockState state, IBlockReader worldIn, BlockPos pos)
+	{
+		return SHAPES.get(state);
+	}
 
 	@Override
 	public float getEnchantPowerBonus(IBlockState state, IWorldReader world, BlockPos pos)

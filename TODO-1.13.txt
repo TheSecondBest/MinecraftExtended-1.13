@@ -1,4 +1,4 @@
-- Update Storage Dimension/World generation code
-- Fix Carpenters Table Gui
-- Fix Commands
-- Fix Custom Recipe Type
+- Update Storage Dimension/World generation code (Not going to be easy)
+- Fix Carpenters Table Gui (No idea what's wrong)
+- Fix Commands (Going to be slightly annoying)
+- Fix Custom Recipe Type (Not sure how)
