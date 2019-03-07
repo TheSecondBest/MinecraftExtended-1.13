@@ -46,6 +46,7 @@ public class MinecraftExtended
 
 	private void setup(final FMLCommonSetupEvent event)
 	{
+		MEBiomeFeatures.register();
 		proxy.preInit();
 	}
 

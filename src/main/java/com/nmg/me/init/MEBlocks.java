@@ -6,14 +6,11 @@ import com.nmg.me.block.*;
 import com.nmg.me.handlers.RegistryHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
-import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.BiomeColors;
 
 public class MEBlocks
 {
@@ -35,6 +32,7 @@ public class MEBlocks
 	public static final Block DISPLAY_CABINET;
 	public static final Block STORAGE_SHELF;
 	public static final Block CANDLE;
+	public static final Block PINK_SEA_ANEMONE, BLUE_SEA_ANEMONE;
 
 	static
 	{
@@ -61,6 +59,8 @@ public class MEBlocks
 		DISPLAY_CABINET = new BlockDisplayCabinet();
 		STORAGE_SHELF = new BlockStorageShelf();
 		CANDLE = new BlockCandle();
+		PINK_SEA_ANEMONE = new BlockSeaAnemone();
+		BLUE_SEA_ANEMONE = new BlockSeaAnemone();
 	}
 
 	public static void register()
@@ -87,6 +87,8 @@ public class MEBlocks
 		registerBlock("display_cabinet", DISPLAY_CABINET);
 		registerBlock("storage_shelf", STORAGE_SHELF);
 		registerBlock("candle", CANDLE);
+		registerBlock("pink_sea_anemone", PINK_SEA_ANEMONE);
+		registerBlock("blue_sea_anemone", BLUE_SEA_ANEMONE);
 
 		// README: Always register stair LAST
 

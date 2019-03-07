@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "pme:block/pink_sea_anemone"
+  }
+}
